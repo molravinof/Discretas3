@@ -14,10 +14,10 @@ protected:
     t_nat m_mcd; //el Maximo comun divisor
 public:
     bezout():m_a(1),m_b(1){}
+    bezout(bezout &o):m_a(o.getA()),m_b(o.getB()),m_x(o.getX()),m_y(o.getY()),m_mcd(o.getMcd()){}
     bezout(t_nat a,t_nat b):m_a(a),m_b(b){
-        coef();
+        this->coef();
     }
-
     void coef(){
         t_nat x1,x2,y1,y2,c,r,tx,ty;
         x1=1;
@@ -70,14 +70,15 @@ protected:
 	t_nat m_bi;  //desplazamiento
 	t_nat m_ai; //
 	t_nat m_m; //longitud del alfabeto 27
-	//bezout m_test;
+	bezout m_test;
 public:
 	string minuscula="abcdefghijklmnopqrstuvwxyz"; //alfabeto usado
 	cripto():m_user(""),m_msn(""),m_ai(0),m_bi(0){}
 	cripto(string usuario,string mensaje,t_nat a, t_nat b):m_user(usuario),m_msn(mensaje),m_ai(a),m_bi(b){
 		m_m=minuscula.length();
-		bezout m_test(m_ai,m_m);
-		if(m_user=="emisor"){// si el usuario es el emisor 
+        bezout temp(m_ai,m_m);
+        m_test=temp;
+        if(m_user=="emisor"){// si el usuario es el emisor 
 			if(m_test.getMcd()==1)
 				this->afin(); //encripta el mensaje
 			else
@@ -123,7 +124,7 @@ public:
 	void desafin(){
 		string xs;
 		string ys=this->getMsn();
-		bezout m_test(m_ai,m_m);
+		//bezout m_test(m_ai,m_m);
 		for(string::iterator it=ys.begin();it!=ys.end();it++){
 			if(!(minuscula.find(*it)==string::npos)){ //si esta en las minusculas
 				t_nat pos=minuscula.find(*it);
